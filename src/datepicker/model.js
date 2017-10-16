@@ -52,7 +52,6 @@ const createCalendarModel = (d = moment().format(), dayCreator = createDay) => {
   }
 
   let _date = moment(d);
-  let _weeks;
 
   const setDate = (x) => {
     _date = x;
@@ -61,27 +60,19 @@ const createCalendarModel = (d = moment().format(), dayCreator = createDay) => {
 
   const getDate = () => _date;
 
-  const setWeeks = (x) => {
-    _weeks = createWeeks(x);
-    return x;
-  };
-
-  const getWeeks = () => _weeks;
-
-  setWeeks(getDate());
-
   return {
-    getWeeks,
+    getWeeks: () => createWeeks(getDate()),
     getMonthName: () => getCurrentMonthName(getDate()),
     getYear: () => getDate().year(),
     nextMonth() {
-      setDate(setWeeks(getNextMonth(getDate())));
+      setDate(getNextMonth(getDate()));
       return this;
     },
     prevMonth() {
-      setDate(setWeeks(getPreviousMonth(getDate())));
+      setDate(getPreviousMonth(getDate()));
       return this;
     },
+    ...moment,
   };
 };
 

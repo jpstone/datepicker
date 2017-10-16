@@ -1,9 +1,3 @@
-import Calendar from './calendar';
-import Datepicker from './datepicker';
-import model from './model';
+import DatepickerContainer from './datepicker-container';
 
-export {
-  Calendar,
-  Datepicker,
-  model,
-};
+export default DatepickerContainer;

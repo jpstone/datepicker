@@ -8,7 +8,7 @@ const createDay = (isCurrent, name) => {
 };
 
 const createCalendarModel = (d = moment().format(), dayCreator = createDay) => {
-  const totalDays = 42;
+  const TOTAL_DAYS = 42;
 
   const mapDays = isCurrent => day => dayCreator(isCurrent, day);
   const getNextMonth = x => x.clone().add(1, 'month');
@@ -27,7 +27,7 @@ const createCalendarModel = (d = moment().format(), dayCreator = createDay) => {
     ...compileDays(x).map(mapDays(true)),
   ];
 
-  const getNextMonthsDays = x => Array.from({ length: totalDays - x.length })
+  const getNextMonthsDays = x => Array.from({ length: TOTAL_DAYS - x.length })
     .map((x, y) => dayCreator(false, y + 1))
 
   const getFullListOfDays = x => {

@@ -1,10 +1,20 @@
 import React from 'react';
 
-const getDayClassName = ({ isCurrent }) => `dp-day${isCurrent ? ' dp-current-month' : ''}`
+const getDayClassName = ({ isCurrent, isChosen }) => (
+  `dp-day${isCurrent ? ' dp-current-month' : ''}${isChosen ? ' dp-chosen' : ''}`
+)
 
 const getKey = () => Math.random().toString().split('.').join('');
 
-const DatepickerContent = ({ weeks, monthName, year, weekdays, nextMonth, prevMonth }) => (
+const DatepickerContent = ({
+  weeks,
+  monthName,
+  year,
+  weekdays,
+  nextMonth,
+  prevMonth,
+  onSelected,
+}) => (
   <div id="dp-container">
     <div id="dp-title-container">
       <div id="dp-switch-prev-month-container">
@@ -27,7 +37,13 @@ const DatepickerContent = ({ weeks, monthName, year, weekdays, nextMonth, prevMo
         {weeks.map(week => (
           <div key={getKey()} className="dp-week">
             {week.map(day => (
-              <button disabled={!day.isCurrent} type="button" key={getKey()} className={getDayClassName(day)}>
+              <button
+                disabled={!day.isCurrent}
+                type="button"
+                key={getKey()}
+                className={getDayClassName(day)}
+                onClick={() => onSelected(day.onClick)}
+              >
                 {day.name}
               </button>
             ))}

@@ -10,7 +10,7 @@ body {
 
 #dp-container {
   width: 250px;
-  height: 250px;
+  height: 290px;
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
@@ -30,7 +30,7 @@ body {
   font-family: "Lato";
   display: flex;
   align-items: center;
-  height: 30px;
+  height: 40px;
   font-size: 12px;
 }
 
@@ -100,4 +100,19 @@ button.dp-switch-month:focus {
 .dp-day.dp-current-month {
   cursor: pointer;
   color: #757575;
+}
+
+.dp-day.dp-chosen {
+  background-color: #ddd;
+  border-radius: 50%;
+  color: #fff;
+}
+
+.dp-day.dp-current-month.dp-chosen {
+  background-color: #3295ff;
+  color: #fff;
+}
+
+.dp-day:focus {
+  outline: none;
 }

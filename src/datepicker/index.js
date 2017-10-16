@@ -1,9 +1,9 @@
 import Calendar from './calendar';
-import DatePicker from './datepicker';
+import Datepicker from './datepicker';
 import model from './model';
 
 export {
   Calendar,
-  DatePicker,
+  Datepicker,
   model,
 };

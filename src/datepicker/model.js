@@ -1,19 +1,21 @@
 import moment from 'moment';
 
-const createCalendarModel = (d = moment().format()) => {
-  const start = moment(d);
-  const createDay = (isCurrent, day) => {
-    return {
-      isCurrent,
-      day,
-    };
+const createDay = (isCurrent, name) => {
+  return {
+    isCurrent,
+    name,
   };
-  const mapDays = isCurrent => (x, index) => createDay(isCurrent, index + 1);
+};
+
+const createCalendarModel = (d = moment().format(), dayCreator = createDay) => {
+  const totalDays = 42;
+
+  const mapDays = isCurrent => day => dayCreator(isCurrent, day);
   const getNextMonth = x => x.clone().add(1, 'month');
   const getPreviousMonth = x => x.clone().subtract(1, 'month');
   const monthStartDay = x => x.clone().date(1).day();
-  const compileDays = x => Array.from({ length: x.daysInMonth() }).map(mapDays);
-  const currentMonthName = x => moment.months()[x.month()];
+  const compileDays = x => Array.from({ length: x.daysInMonth() }).map((x, y) => y + 1);
+  const getCurrentMonthName = x => moment.months(x.month());
 
   const getPreviousMonthsDays = (x) => {
     const totalPrevDays = compileDays(getPreviousMonth(x));
@@ -24,17 +26,19 @@ const createCalendarModel = (d = moment().format()) => {
     ...getPreviousMonthsDays(x),
     ...compileDays(x).map(mapDays(true)),
   ];
-  const getNextMonthsDays = x => Array.from({ length: 42 - x.length }).map(mapDays(false));
+
+  const getNextMonthsDays = x => Array.from({ length: totalDays - x.length })
+    .map((x, y) => dayCreator(false, y + 1))
 
   const getFullListOfDays = x => {
     const previousAndCurrent = getPreviousAndCurrentMonthsDays(x);
     return [...previousAndCurrent, ...getNextMonthsDays(previousAndCurrent)];
   };
 
-  // const createWeeks = () => Array.from({ length: 6 }).map(() => [Array.from({ length: 7 })]);
-  const createWeeks = () => {
-    const buildWeeks = () => {
+  const createWeeks = (x) => {
+    function buildWeeks() {
       let _currentWeek = 0;
+
       return (weeks, day, index) => {
         if (index && index % 7 === 0) {
           _currentWeek++;
@@ -42,14 +46,42 @@ const createCalendarModel = (d = moment().format()) => {
         weeks[_currentWeek].push(day);
         return weeks;
       };
-    };
-    return getFullListOfDays(getNextMonth(start)).reduce(buildWeeks(), [[], [], [], [], [], []]);
+    }
+
+    return getFullListOfDays(x).reduce(buildWeeks(), [[], [], [], [], [], []]);
   }
 
+  let _date = moment(d);
+  let _weeks;
+
+  const setDate = (x) => {
+    _date = x;
+    return _date;
+  };
+
+  const getDate = () => _date;
+
+  const setWeeks = (x) => {
+    _weeks = createWeeks(x);
+    return x;
+  };
+
+  const getWeeks = () => _weeks;
+
+  setWeeks(getDate());
+
   return {
-    moment,
-    fullList: getFullListOfDays(getNextMonth(start)),
-    weeks: createWeeks(),
+    getWeeks,
+    getMonthName: () => getCurrentMonthName(getDate()),
+    getYear: () => getDate().year(),
+    nextMonth() {
+      setDate(setWeeks(getNextMonth(getDate())));
+      return this;
+    },
+    prevMonth() {
+      setDate(setWeeks(getPreviousMonth(getDate())));
+      return this;
+    },
   };
 };
 

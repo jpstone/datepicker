@@ -1,13 +1,11 @@
 import React from 'react';
 import './App.css';
-import { Calendar } from './datepicker';
+import { Datepicker, model } from './datepicker';
 import test from './testbed';
 
 const App = () => (
   <div className="App">
-    <Calendar>
-      {test}
-    </Calendar>
+    <Datepicker {...model()} />
   </div>
 );
 
